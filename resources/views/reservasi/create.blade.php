@@ -155,10 +155,45 @@
             <input type="number" name="jumlah_tamu" required>
         </div>
 
+        <input type="hidden" id="harga_kamar" value="{{ $kamar->harga_kamar }}">
+
+
+        <div class="form-group">
+    <label>Ringkasan Biaya</label>
+    <input type="text" id="total_bayar" readonly value="Rp 0">
+</div>
+
+
         <a href="{{ route('reservasi.index')}}">Kembali</a>
         <button type="submit" class="btn">Simpan Reservasi</button>
     </form>
 </div>
+
+<script>
+    const checkInInput  = document.querySelector('input[name="check_in"]');
+    const checkOutInput = document.querySelector('input[name="check_out"]');
+    const hargaKamar    = document.getElementById('harga_kamar').value;
+    const totalBayarEl  = document.getElementById('total_bayar');
+
+    function hitungTotal() {
+        const checkIn  = new Date(checkInInput.value);
+        const checkOut = new Date(checkOutInput.value);
+
+        if (checkIn && checkOut && checkOut > checkIn) {
+            const diffTime  = checkOut - checkIn;
+            const lamaInap  = diffTime / (1000 * 60 * 60 * 24);
+            const total     = lamaInap * hargaKamar;
+
+            totalBayarEl.value = 'Rp ' + total.toLocaleString('id-ID');
+        } else {
+            totalBayarEl.value = 'Rp 0';
+        }
+    }
+
+    checkInInput.addEventListener('change', hitungTotal);
+    checkOutInput.addEventListener('change', hitungTotal);
+</script>
+
 
 </body>
 </html>
